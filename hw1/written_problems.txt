@@ -1,0 +1,155 @@
+1. This is a trick question because shifting EVIRE by 13 gives river and
+   shifting it by 22 gives arena. So you cannot tell where they will be
+   meeting
+
+2. U = 21  C = 3  R = 18
+   9 * 21 + 2 = 191 % 26 = 9 = I
+   9 * 3 + 2 = 29 % 26 = 3 = C
+   9 * 18 + 2 = 164 % 26 = 8 = H
+
+   Plaintext is ICH
+
+3. 5x + 7 = y (mod 26) -> encryption key
+   howareyou -> udrlsfbdh
+   gcd(5, 26) = 1
+   5 * 21 -> 1 (mod 26)
+   21 * ( x - 7 ) (mod 26) -> 21x - 147 -> 21x + 9 (mod 26)
+   u -> 21
+   21 * 21 + 9 (mod 26) = 8 -> h
+
+   The decryption function is 21x + 9 (mod 26)
+
+4. hahaha -> NONONO
+   a * 8 + b = 14
+   a * 1 + b = 15
+
+   7a = -1 -> 25 (mod 26)
+   a = 11, b = 4
+
+   The encryption function is 11x + 4 (mod 26)
+
+5. CRWWZ
+   C -> H   3 -> 8
+   R -> A   18 -> 1
+
+   a * 3 + b = 8
+   a * 18 + b = 1
+
+   -15 * a = 7
+   a = 3, b = 25
+
+   The decryted text is fynnw
+
+6. There is no advantage to using two different affine ciphers to
+   encrypt because there will still be some function ax + b that takes the
+   twice encrypted text and gets you back to the plain text. You can still
+   brute force it without any extra work.
+
+8.
+
+a) For the affine cipher to work we know that the gcd(alpha, 26) must
+equal 1. So we can do:
+
+gcd(1, 30) = 1
+gcd(2, 30) = 2
+gcd(3, 30) = 3
+gcd(4, 30) = 2
+gcd(5, 30) = 5
+gcd(6, 30) = 6
+gcd(7, 30) = 1
+gcd(8, 30) = 2
+gcd(9, 30) = 3
+gcd(10, 30) = 10
+gcd(11, 30) = 1
+gcd(12, 30) = 6
+gcd(13, 30) = 1
+gcd(14, 30) = 2
+gcd(15, 30) = 15
+gcd(16, 30) = 2
+gcd(17, 30) = 1
+gcd(18, 30) = 6
+gcd(19, 30) = 1
+gcd(20, 30) = 10
+gcd(21, 30) = 3
+gcd(22, 30) = 2
+gcd(23, 30) = 1
+gcd(24, 30) = 6
+gcd(25, 30) = 5
+gcd(26, 30) = 2
+gcd(27, 30) = 3
+gcd(28, 30) = 2
+gcd(29, 30) = 1
+gcd(30, 30) = 30
+
+We can see that the only numbers that have a gcd of 1 with 30 are
+1, 7, 11, 13, 17, 19, 23, 29. Therefore there are only 8 choices for
+alpha.
+
+b) a -> 1, d -> 4
+   1 * 10 + 0 = 10
+   4 * 10 + 0 = 40
+
+   10 % 30 = 10
+   40 % 30 = 10
+
+   a and d would be the same with alpha = 10 and beta = 0
+
+
+
+Matt's Decrypted message from angel was:
+
+my two oldest sons and i earned our brown belts in tae kwon do mosaics worship leader rob was our instructor
+
+------------------------------------------------------------------------------------------------------------
+
+TKJJKYOMGFEXENYMKGMNERMTKJJKYOMGRMYKUGMNHMWRMYEQMTKGHOEXG
+->
+fallacies do not cease to be fallacies because they become fashions
+
+Code used to decrypt the affine cipher:
+
+require 'rubygems'
+require 'rspec'
+
+LOW = 96
+ALPHAHBET_LENGTH = 26
+
+def shift_sentence(string, d1, d2)
+  string.split("").inject([]) do |sentence, letter|
+    sentence << shift_letter(letter, d1, d2)
+  end
+end
+
+def shift_letter(letter, alpha, beta)
+  temp = ((letter[0] - LOW) * alpha) + beta
+  letter[0] = temp % ALPHAHBET_LENGTH + LOW; letter
+end
+
+sentence = gets
+sentence.downcase!
+
+1.upto(25).each do |i|
+  1.upto(25).each do |j|
+    shifted_sentence = shift_sentence(sentence, i, j)
+    shifted_sentence.pop
+    puts "shift by #{i}x + #{j}: #{shifted_sentence.join("")}"
+  end
+end
+
+
+describe "shift_letter tests" do
+  [
+
+    ["a", 1, 0, "a"],
+    ["a", 1, 1, "b"],
+    ["a", 2, 1, "c"],
+    ["c", 3, 25, "h"],
+    ["r", 25, 14, "v"],
+    ["r", 3, 24, "v"]
+
+  ].each do |initial, d1, d2, final|
+    it "should return #{final} for #{d1}x + #{d2} where x = #{initial}" do
+      shift_letter(initial, d1, d2).should == final
+    end
+  end
+end
