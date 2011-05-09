@@ -3,7 +3,8 @@ module Load
     file = File.open(filename, "rb").read
     file.chomp!
 
-    #convert asci to bitarray
-    return file.unpack("B*")[0].split("").map { |i| i.to_i }
+    #convert asci to integer
+    unpacked = file.unpack("B*")[0]
+    return unpacked.size, unpacked.to_i(2)
   end
 end
