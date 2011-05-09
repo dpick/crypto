@@ -3,17 +3,12 @@ require "expanded_array"
 describe "Array tests" do
   it "should left rotate the array" do
     shift = 5
-    shift.rotate_left(1, 3).should == 3
+    shift.rotate_left(1).should == 3
   end
 
   it "should rotate left multiple times" do
     shift = 5
-    shift.rotate_left(2, 3).should == 6
-  end
-
-  it "should right rotate the array" do
-    shift = 5
-    shift.rotate_right(1, 3).should == 6
+    shift.rotate_left(2).should == 6
   end
 
   it "should split a string correctly" do

@@ -22,26 +22,10 @@ class String
 end
 
 class Integer
-  def rotate_right(count, size)
-    temp = sprintf("%0#{size}b", self)
+  def rotate_left(n = 1)
+    shift = shift & 31
+    return num if shift == 0
 
-    count.times do
-      last_bit = temp.slice!(-1).chr
-      temp = "#{last_bit}#{temp}"
-    end
-
-    return temp.to_i(2)
-  end
-
-  def rotate_left(count, size)
-    temp = sprintf("%0#{size}b", self)
-
-    count.times do
-      first_bit = temp[0].chr
-      temp.slice!(1..-1)
-      temp << first_bit
-    end
-
-    return temp.to_i(2)
+    return ((self << n) & (2**32-1)  ) | (self >> (32 - n))
   end
 end
