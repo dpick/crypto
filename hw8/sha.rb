@@ -1,5 +1,5 @@
 require "load_file"
-require "expanded_array"
+require "helpers"
 
 module SHA
   include Load
@@ -33,8 +33,6 @@ module SHA
     e = h4
 
     0.upto(79).each do |i|
-      #puts "a = #{a.to_s(16)}, b = #{b.to_s(16)}, c = #{c.to_s(16)}, d = #{d.to_s(16)}, e = #{e.to_s(16)}"
-
       if i >= 0 && i <= 19
         f = d ^ (b & (c ^ d))
         k = 0x5A827999
@@ -52,10 +50,7 @@ module SHA
         k = 0xCA62C1D6
       end
 
-      temp = (a.rotate_left(5) + f) % 2**32
-      temp = (temp + e) % 2**32
-      temp = (temp + k) % 2**32
-      temp = (temp + words[i]) % 2**32
+      temp = (a.rotate_left(5) + f + e + k + words[i]) % 2**32
       e = d
       d = c
       c = b.rotate_left(30) % 2 ** 32

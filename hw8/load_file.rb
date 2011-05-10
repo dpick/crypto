@@ -1,7 +1,7 @@
 module Load
   def self.file(filename)
     file = File.open(filename, "rb").read
-    file.chomp!
+    file.chomp!.chomp!
 
     #convert asci to integer
     unpacked = file.unpack("B*")[0]
